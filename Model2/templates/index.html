@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Credit Price Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <div class="list-item-box">
+                        <a href="#" onclick="loadContent('index1.html'); return false;">Home</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5000">Neutralisation Pathway</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5001">Carbon Credit Price </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5002">Leaderboard</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5003">Carbon Credit and Offset</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5004">Carbon Emission</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="content">
+            <div id="contentArea">
+                <h1 class="cnp-title">Carbon Credit Price Predictor</h1>
+                <form id="prediction-form">
+                    <label class="input-label" for="offset_method">Offset Method:</label>
+                    <select class="select-option" id="offset_method" name="offset_method" required>
+                        <option value="">Select...</option>
+                        <option value="Afforestation">Afforestation</option>
+                        <option value="Renewable Energy">Renewable Energy</option>
+                        <option value="Energy Efficiency">Energy Efficiency</option>
+                        <option value="Reforestation">Reforestation</option>
+                    </select><br><br>
+
+                    <label class="input-label" for="project_location">Project Location:</label>
+                    <select class="select-option" id="project_location" name="project_location" required>
+                        <option value="">Select...</option>
+                        <option value="India">India</option>
+                        <option value="USA">USA</option>
+                        <option value="China">China</option>
+                        <option value="Brazil">Brazil</option>
+                    </select><br><br>
+
+                    <label class="input-label" for="verification_status">Verification Status:</label>
+                    <select class="select-option" id="verification_status" name="verification_status" required>
+                        <option value="">Select...</option>
+                        <option value="Verified">Verified</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Rejected">Rejected</option>
+                    </select><br><br>
+
+                    <label class="input-label" for="technology_used">Technology Used:</label>
+                    <select class="select-option" id="technology_used" name="technology_used" required>
+                        <option value="">Select...</option>
+                        <option value="Solar">Solar</option>
+                        <option value="Wind">Wind</option>
+                        <option value="Hydro">Hydro</option>
+                        <option value="Biomass">Biomass</option>
+                    </select><br><br>
+
+                    <label class="input-label" for="emission_reduction">Emission Reduction (tonnes):</label>
+                    <input class="input-field" type="number" id="emission_reduction" name="emission_reduction" placeholder="In Tones" required><br><br>
+
+                    <label class="input-label" for="project_size">Project Size (hectares):</label>
+                    <input class="input-field" type="number" id="project_size" name="project_size" placeholder="$" required><br><br>
+
+                    <input class="submit-btn" type="submit" value="Predict">
+                </form>
+
+                <div id="result">Carbon Credit Price Prediction</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const offset_method = document.getElementById('offset_method').value;
+            const project_location = document.getElementById('project_location').value;
+            const verification_status = document.getElementById('verification_status').value;
+            const technology_used = document.getElementById('technology_used').value;
+            const emission_reduction = document.getElementById('emission_reduction').value;
+            const project_size = document.getElementById('project_size').value;
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    offset_method,
+                    project_location,
+                    verification_status,
+                    technology_used,
+                    emission_reduction,
+                    project_size
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+    if (data.error) {
+        document.getElementById('result').innerText = `Error: ${data.error}`;
+    } else {
+        document.getElementById('result').innerText = `Predicted Carbon Credit Price: ₹${data.predicted_price}`;
+    }
+})
+
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'An error occurred. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>

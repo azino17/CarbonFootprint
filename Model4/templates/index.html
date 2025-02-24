@@ -1,0 +1,131 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Credits Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <li>
+                <div class="list-item-box">
+                    <a href="#" onclick="loadContent('index1.html'); return false;">Home</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5000">Neutralisation Pathway</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5001">Carbon Credit Price</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5002">Leaderboard</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5003">Carbon Credit and Offset</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5004">Carbon Emission</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="container">
+        <h1 class="mt-4 cnp-title">Carbon Credits Calculator</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="mt-4 mb-4">
+            <div class="mb-3 form-upload form-area">
+                <label for="formFile" class="form-label input-label">Select single file</label>
+                <input class="form-control" type="file" class="form-control-file" id="file" name="file" required>
+                <button type="submit" class="submit-btn">Calculate</button>
+              </div>
+        </form>
+
+        {% if table %}
+        <h2>Results:</h2>
+        <div class="table-responsive">
+            {{ table|safe }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Credits Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <li>
+                <div class="list-item-box">
+                    <a href="#" onclick="loadContent('index1.html'); return false;">Home</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5000">Neutralisation Pathway</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5001">Carbon Credit Price</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5002">Leaderboard</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5003">Carbon Credit and Offset</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5004">Carbon Emission</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="container">
+        <h1 class="mt-4 cnp-title">Carbon Credits Calculator</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="mt-4 mb-4">
+            <div class="mb-3 form-upload form-area">
+                <label for="formFile" class="form-label input-label">Select single file</label>
+                <input class="form-control" type="file" class="form-control-file" id="file" name="file" required>
+                <button type="submit" class="submit-btn">Calculate</button>
+              </div>
+        </form>
+
+        {% if table %}
+        <h2>Results:</h2>
+        <div class="table-responsive">
+            {{ table|safe }}
+        </div>
+        {% endif %}
+
+        {% if plot_url %}
+        <h2>Emissions Plot:</h2>
+        <img src="data:image/png;base64,{{ plot_url }}" alt="Emissions Plot" class="img-fluid">
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Emission Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <ul>
+            <li>
+                <div class="list-item-box">
+                    <a href="#" onclick="loadContent('index1.html'); return false;">Home</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5000">Neutralisation Pathway</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5001">Carbon Credit Price</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5002">Leaderboard</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5003">Carbon Credit and Offset</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5004">Carbon Emission</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="content-area">
+        <h1 class="cnp-title">Predict Carbon Emission</h1>
+        <form id="predictForm" action="/predict" method="post" class="form-area">
+            <label class="input-label" for="coal_production">Coal Production:</label><br>
+            <input class="input-field" type="number" id="coal_production" name="coal_production" required><br><br>
+
+            <label class="input-label" for="coal_type">Coal Type:</label><br>
+            <input class="input-field" type="number" id="coal_type" name="coal_type" required><br><br>
+
+            <label class="input-label" for="energy_consumption">Energy Consumption:</label><br>
+            <input class="input-field" type="number" id="energy_consumption" name="energy_consumption" required><br><br>
+
+            <label class="input-label" for="emission_factor">Emission Factor:</label><br>
+            <input class="input-field" type="number" step="0.01" id="emission_factor" name="emission_factor" required><br><br>
+
+            <input class="submit-btn" type="submit" value="Predict">
+        </form>
+
+        <div id="result">Prediction result will be displayed here.</div>
+        <div id="plotContainer" style="margin-top: 20px;">
+            <!-- The plot image will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictForm').onsubmit = async function (event) {
+            event.preventDefault();  // Prevent the default form submission
+            const formData = new FormData(event.target);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            
+            if (data.prediction) {
+                document.getElementById('result').textContent = `Predicted Carbon Emission: ${data.prediction} kg CO2`;
+            }
+            
+            if (data.histogram_image) {
+                const imgElement = document.createElement('img');
+                imgElement.src = data.histogram_image;
+                imgElement.alt = 'Histogram Plot';
+                imgElement.style.maxWidth = '100%'; // Responsive image
+                imgElement.style.height = 'auto';
+                document.getElementById('plotContainer').innerHTML = ''; // Clear previous images
+                document.getElementById('plotContainer').appendChild(imgElement);
+            } else {
+                document.getElementById('plotContainer').innerHTML = 'Error loading plot.';
+            }
+        }
+    </script>
+</body>
+
+</html>

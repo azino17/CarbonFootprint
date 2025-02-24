@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Neutrality Predictor</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+    <link rel="stylesheet" href="../static/style.css"> <!-- Include your original styles if needed -->
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <div class="list-item-box">
+                        <a href="#" onclick="loadContent('index1.html'); return false;">Home</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5000">Neutralisation Pathway</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5001">Carbon Credit Price</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5002">Leaderboard</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5003">Carbon Credit and Offset</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-item-box">
+                        <a href="http://127.0.0.1:5004">Carbon Emission</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="content">
+            <div id="contentArea">
+                <h1 class="cnp-title">Carbon Neutrality Predictor</h1>
+                <form id="prediction-form">
+                    <label class="input-label" for="emissions">Emissions (tonnes):</label>
+                    <input class="input-field" type="number" id="emissions" name="emissions" placeholder="In Tones" required><br><br>
+
+                    <label class="input-label" for="cost">Cost (USD):</label>
+                    <input class="input-field" type="number" id="cost" name="cost" placeholder="$" required><br><br>
+
+                    <input class="submit-btn" type="submit" value="Predict">
+                </form>
+
+                <div id="result">Carbon Neutrality Prediction</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!-- Ensure this script includes the loadContent function -->
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const emissions = document.getElementById('emissions').value;
+            const cost = document.getElementById('cost').value;
+            
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ emissions, cost })
+            })
+            .then(response => response.json())
+            .then(data => {
+    if (data.error) {
+        document.getElementById('result').innerText = `Error: ${data.error}`;
+    } else {
+        document.getElementById('result').innerText = `The best strategy to follow is ${data.best_strategy}. Predicted Effectiveness: ${data.best_effectiveness.toFixed(2)} tonnes neutralized.`;
+    }
+})
+
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'An error occurred. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>

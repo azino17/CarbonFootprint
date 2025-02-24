@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Data Display</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <li>
+                <div class="list-item-box">
+                    <a href="#" onclick="loadContent('index1.html'); return false;">Home</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5000">Neutralisation Pathway</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5001">Carbon Credit Price</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5002">Leaderboard</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5003">Carbon Credit and Offset</a>
+                </div>
+            </li>
+            <li>
+                <div class="list-item-box">
+                    <a href="http://127.0.0.1:5004">Carbon Emission</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1 id="pageTitle" class="cnp-title">Leaderboard Ranking of Coal Mine Companies</h1>
+        <div id="contentArea">
+            <table id="csvTable" class="hidden table table-bordered">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.href.includes('5002')) {
+                document.getElementById('csvTable').classList.remove('hidden');
+                fetchAndDisplayCSV();
+            }
+        });
+
+        async function fetchAndDisplayCSV() {
+            try {
+                const response = await fetch('/data');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                displayData(data);
+            } catch (error) {
+                console.error('Error fetching the data:', error);
+            }
+        }
+
+        function displayData(data) {
+            const table = document.getElementById('csvTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+
+            if (data.length > 0) {
+                const headers = Object.keys(data[0]);
+                const headerRow = document.createElement('tr');
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+
+                data.forEach(row => {
+                    const rowElement = document.createElement('tr');
+                    headers.forEach(header => {
+                        const td = document.createElement('td');
+                        td.textContent = row[header];
+                        rowElement.appendChild(td);
+                    });
+                    tbody.appendChild(rowElement);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
